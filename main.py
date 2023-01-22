@@ -5,13 +5,13 @@ import generators
 
 # available column types for generation
 class ColumnType(Enum):
-    NAME          = 1
-    PHONE_NUMBER  = 2
-    EMAIL         = 3
+    NAME = 1
+    PHONE_NUMBER = 2
+    EMAIL = 3
     RANDOM_NUMBER = 4
-    CITY          = 5
-    COUNTRY       = 6
-    PASSWORD      = 7
+    CITY = 5
+    COUNTRY = 6
+    PASSWORD = 7
 
 
 generator_functions = [
@@ -28,7 +28,8 @@ generator_functions = [
 def list_column_types():
     print("Available column types:")
     for col_type in ColumnType:
-        print('\t{0}) {1}'.format(col_type.value, col_type.name))
+        print("\t{0}) {1}".format(col_type.value, col_type.name))
+
 
 class Column:
     def __init__(self, name, col_type):
@@ -44,7 +45,7 @@ class Column:
 
 
 class Header:
-    columns = [] # list of Column objects
+    columns = []  # list of Column objects
 
     def __init__(self):
         pass
@@ -63,11 +64,30 @@ class Header:
         for i in range(len(self.columns)):
             # printing with index in list
             if self.columns[i].col_type == ColumnType.RANDOM_NUMBER.name:
-                print('[{0}]\t{1} ({3}-{4})\t{2}'.format(i, self.columns[i].col_type, self.columns[i].name, self.columns[i].lo, self.columns[i].hi))
+                print(
+                    "[{0}]\t{1} ({3}-{4})\t{2}".format(
+                        i,
+                        self.columns[i].col_type,
+                        self.columns[i].name,
+                        self.columns[i].lo,
+                        self.columns[i].hi,
+                    )
+                )
             elif self.columns[i].col_type == ColumnType.CITY.name:
-                print('[{0}]\t{1} ({3})\t{2}'.format(i, self.columns[i].col_type, self.columns[i].name, self.columns[i].lo))
+                print(
+                    "[{0}]\t{1} ({3})\t{2}".format(
+                        i,
+                        self.columns[i].col_type,
+                        self.columns[i].name,
+                        self.columns[i].lo,
+                    )
+                )
             else:
-                print('[{0}]\t{1}\t{2}'.format(i, self.columns[i].col_type, self.columns[i].name))
+                print(
+                    "[{0}]\t{1}\t{2}".format(
+                        i, self.columns[i].col_type, self.columns[i].name
+                    )
+                )
         print()
 
     def change_column_name(self, index: int, new_name: str):
@@ -78,17 +98,17 @@ class Header:
         if new_type == ColumnType.CITY.name:
             print("enter 'countries' to see list of all countries.")
             lo = input("(specify country/leave empty if any)~> ").strip().title()
-            while lo.lower() == 'countries':
+            while lo.lower() == "countries":
                 print(generators.get_all_countries())
                 lo = input("(specify country/leave empty if any)~> ")
 
             # if country not found in list of countries write warning and exit
-            if lo.strip() != '' and lo.strip() not in generators.get_all_countries():
+            if lo.strip() != "" and lo.strip() not in generators.get_all_countries():
                 print("Country not found.")
                 return
 
             # if no input then any country
-            if lo == '':
+            if lo == "":
                 lo = "any"
 
             self.columns[index].col_type = new_type
@@ -100,7 +120,7 @@ class Header:
                 lo = int(input("(lowest number)~> "))
                 hi = int(input("(highest number)~> "))
 
-                if (lo > hi):
+                if lo > hi:
                     print("Incorrect input. First number must be lower than second.")
                 else:
                     self.columns[index].col_type = new_type
@@ -112,56 +132,62 @@ class Header:
 
 
 class DataRow:
-    cells = [] # row of data
+    cells = []  # row of data
 
     def __init__(self):
         pass
 
     def __str__(self):
-        str_row = ''
+        str_row = ""
         for cell in self.cells:
-            str_row += '{0}, '.format(cell)
-        str_row += '\n'
+            str_row += "{0}, ".format(cell)
+        str_row += "\n"
         return str_row
 
     def generate(self):
         self.cells.clear()
         for col in Header.columns:
-            self.cells.append(generator_functions[ColumnType[col.col_type].value-1](col.lo, col.hi))
+            self.cells.append(
+                generator_functions[ColumnType[col.col_type].value - 1](col.lo, col.hi)
+            )
 
 
 running = True
 header = Header()
 
+
 def clear_table():
     header.columns.clear()
 
+
 # introduction, waiting for commands
 print("====== Dataset Generator ======\n")
-print("Type \"help\" for information.")
+print('Type "help" for information.')
 while running == True:
     user_input = input(">>> ")
-    # list of available commands    
-    if user_input.lower().strip() == 'help':
-        print('List of commands:\n'\
-            '\th - show created table\n'\
-            '\tn - add new column\n'\
-            '\tr - remove column\n'\
-            '\tc - change column\n'\
-            '\tg - generate dataset\n'\
-            '\treset - clear table template\n'\
-            '\texit - terminate app\n')
+    # list of available commands
+    if user_input.lower().strip() == "help":
+        print(
+            "List of commands:\n"
+            "\th - show created table\n"
+            "\tn - add new column\n"
+            "\tr - remove column\n"
+            "\tc - change column\n"
+            "\tg - generate dataset\n"
+            "\treset - clear table template\n"
+            "\texit - terminate app\n"
+        )
 
     # show header
-    elif user_input.lower().strip() == 'h':
+    elif user_input.lower().strip() == "h":
         header.show_header()
 
     # add new column
-    elif user_input.lower().strip() == 'n':
+    elif user_input.lower().strip() == "n":
         input_name = input("(column name)~> ").strip()
 
         # column name can't be empty
-        if input_name.strip() == '':
+        if input_name.strip() == "":
             print("Column name can't be empty.")
             continue
 
@@ -181,18 +207,23 @@ while running == True:
         # if country not found generates city from random country
         if input_type == ColumnType.CITY.name:
             print("enter 'countries' to see list of all countries.")
-            created_column.lo = input("(specify country/leave empty if any)~> ").strip().title()
-            while created_column.lo.lower() == 'countries':
+            created_column.lo = (
+                input("(specify country/leave empty if any)~> ").strip().title()
+            )
+            while created_column.lo.lower() == "countries":
                 print(generators.get_all_countries())
                 created_column.lo = input("(specify country/leave empty if any)~> ")
 
             # if country not found in list of countries write warning and exit
-            if created_column.lo.strip() != '' and created_column.lo.strip() not in generators.get_all_countries():
+            if (
+                created_column.lo.strip() != ""
+                and created_column.lo.strip() not in generators.get_all_countries()
+            ):
                 print("Country not found.")
                 continue
 
             # if no input then any country
-            if created_column.lo == '':
+            if created_column.lo == "":
                 created_column.lo = "any"
 
         # if type is RANDOM_NUMBER ask user to enter borders
@@ -201,7 +232,7 @@ while running == True:
                 created_column.lo = int(input("(lowest number)~> "))
                 created_column.hi = int(input("(highest number)~> "))
 
-                if (created_column.lo > created_column.hi):
+                if created_column.lo > created_column.hi:
                     print("Incorrect input. First number must be lower than second.")
                     continue
             except:
@@ -211,7 +242,7 @@ while running == True:
         header.add_column(created_column)
 
     # remove column
-    elif user_input.lower().strip() == 'r':
+    elif user_input.lower().strip() == "r":
         # displaying all columns
         header.show_header()
 
@@ -223,7 +254,7 @@ while running == True:
             print("Column with id {0} not found.".format(user_input))
 
     # change column
-    elif user_input.lower().strip() == 'c':
+    elif user_input.lower().strip() == "c":
         # displaying all columns
         header.show_header()
 
@@ -233,31 +264,32 @@ while running == True:
         except:
             print("Invalid id.")
 
-        what_to_change = input('What\'d you like to change?\n'\
-                                '\t1) Name\n'
-                                '\t2) Type\n'
-                                '\t3) Both\n~> ')
+        what_to_change = input(
+            "What'd you like to change?\n" "\t1) Name\n" "\t2) Type\n" "\t3) Both\n~> "
+        )
 
         # changing only name
-        if what_to_change.strip() == '1':
+        if what_to_change.strip() == "1":
             new_name = input("(enter new name)~> ")
             header.change_column_name(id_to_change, new_name)
 
             print("Column name changed.")
 
         # changing only type
-        elif what_to_change.strip() == '2':
+        elif what_to_change.strip() == "2":
             list_column_types()
             new_type = input("(column type)(1-7)~> ")
             try:
                 new_type = ColumnType(int(new_type)).name
                 header.change_column_type(id_to_change, new_type)
             except:
-                print("Incorrect data type. Enter type id from list of available options.")
+                print(
+                    "Incorrect data type. Enter type id from list of available options."
+                )
                 continue
 
         # changing name and type
-        elif what_to_change.strip() == '3':
+        elif what_to_change.strip() == "3":
             # changing name
             new_name = input("(enter new name)~> ")
             header.change_column_name(id_to_change, new_name)
@@ -269,14 +301,16 @@ while running == True:
                 new_type = ColumnType(int(new_type)).name
                 header.change_column_type(id_to_change, new_type)
             except:
-                print("Incorrect data type. Enter type id from list of available options.")
+                print(
+                    "Incorrect data type. Enter type id from list of available options."
+                )
                 continue
 
         else:
             print("Unknown option.")
 
     # generate dataset
-    elif user_input.lower().strip() == 'g':
+    elif user_input.lower().strip() == "g":
         file_name = input("(enter name of CSV file)~> ")
 
         try:
@@ -290,7 +324,7 @@ while running == True:
         f = open("{0}.csv".format(file_name), "a")
         for column in header.columns:
             f.write("{0}, ".format(column.name))
-        f.write('\n')
+        f.write("\n")
         f.close()
 
         # generating rows of data, writing data to csv file
@@ -315,12 +349,12 @@ while running == True:
             running = False
 
     # clearing table template
-    elif user_input.lower().strip() == 'reset':
+    elif user_input.lower().strip() == "reset":
         clear_table()
         print("Template cleared.")
 
     # terminating on exit command
-    elif user_input.lower().strip() == 'exit':
+    elif user_input.lower().strip() == "exit":
         running = False
 
     elif user_input.strip() == "":
@@ -330,4 +364,3 @@ while running == True:
         print("Unknown command. Type 'help' for information.")
 
 print("Program complete.")
-
